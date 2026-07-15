@@ -3,6 +3,7 @@ import random
 import time
 from card import CardPersistence
 import card_factory
+from card_pile import CardPile
 
 class Entity:
     def __init__(self, name, max_hp):
@@ -59,23 +60,19 @@ class Entity:
 
 
 class Player(Entity):
-    def __init__(self, name="Der Eiserne", max_hp=80):
-            super().__init__(name, max_hp)
+    def __init__(self, name="Der Eiserne", hp=80):
+            super().__init__(name, hp)
             self.max_energy = 3
             self.energy = 3
-            
-            # Holt sich das saubere Startdeck aus der Factory (statt aus der db)
-            self.deck = card_factory.get_starting_deck()  # <-- Hier anpassen!
-
             self.hand = []
-            self.draw_pile = []
-            self.discard_pile = []
-            self.exhaust_pile = []
 
     def init_combat(self):
-        self.draw_pile = self.deck.copy()
-        random.shuffle(self.draw_pile)
-        self.discard_pile, self.exhaust_pile, self.hand = [], [], []
+        self.draw_pile = CardPile("Nachziehstapel", card_factory.get_starting_deck())
+        self.discard_pile = CardPile("Ablagestapel")
+        self.exhaust_pile = CardPile("Erschöpfungsstapel")
+        self.hand_pile = CardPile("Hand")
+        
+        self.draw_pile.shuffle()
         self.block = 0
         self.effects = {}
 
@@ -85,12 +82,12 @@ class Player(Entity):
         for eff in list(self.effects.values()): eff.on_turn_start(self)
         self.clean_expired_effects()
         
-        cards_to_draw = 5 - len(self.hand)
+        cards_to_draw = 5
         if cards_to_draw > 0:
             self.draw_cards(cards_to_draw)
 
     def end_turn(self):
-        for card in list(self.hand):
+        for card in list(self.hand_pile):
             if card.persistence == CardPersistence.ETHEREAL:
                 print(f"  [Flüchtig] {card.name} verflüchtigt sich und wird erschöpft!")
                 self.exhaust_pile.append(card)
@@ -99,19 +96,24 @@ class Player(Entity):
                 continue
             else:
                 self.discard_pile.append(card)
-            self.hand.remove(card)
+            self.hand_pile.remove(card)
         
         for eff in list(self.effects.values()): eff.on_turn_end(self)
         self.clean_expired_effects()
 
     def draw_cards(self, num):
+
         for _ in range(num):
+            
             if not self.draw_pile:
+                if not self.discard_pile:
+                    break
+                
                 self.draw_pile = self.discard_pile.copy()
-                random.shuffle(self.draw_pile)
                 self.discard_pile = []
-            if self.draw_pile:
-                self.hand.append(self.draw_pile.pop(0))
+                random.shuffle(self.draw_pile)
+
+            self.hand_pile.append(self.draw_pile.pop(0))
 
 
 class Enemy(Entity):
