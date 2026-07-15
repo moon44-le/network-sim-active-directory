@@ -113,7 +113,11 @@ class Player(Entity):
                 self.discard_pile = []
                 random.shuffle(self.draw_pile)
 
-            self.hand_pile.append(self.draw_pile.pop(0))
+            # Die oberste Karte im Nachziehstapel ist immer bei Index 0
+            card_to_draw = self.draw_pile[0]
+            
+            # Jetzt nutzen wir die neue Transfer-Methode
+            self.transfer_card(self.draw_pile, self.hand_pile, card_to_draw)
 
 
 class Enemy(Entity):

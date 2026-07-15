@@ -36,22 +36,13 @@ class CardPile:
             
             card_to_draw = self.draw_pile[0]
             self.transfer_card(self.draw_pile, self.hand_pile, card_to_draw)
-    
 
-    def transfer_card_to(self, target_pile, card, target_position):
-        """
-        Transferiert eine Karte von diesem Stapel auf einen Zielstapel.
-        
-        Mögliche Werte für target_position:
-        - 'top': Legt die Karte ganz nach oben (Index 0).
-        - 'bottom': Legt die Karte ganz nach unten (Ende der Liste).
-        - 'random': Mischt die Karte an eine zufällige Position im Zielstapel.
-        - int: Fügt die Karte an einem exakten Index ein.
-        """
+    def transfer_card(self, source_pile, target_pile, card, target_position = None):
+
         # 1. Karte aus dem aktuellen Stapel entfernen
-        if card not in self.cards:
+        if card not in source_pile:
             raise ValueError(f"Karte '{card.name}' ist nicht im Stapel '{self.name}'!")
-        self.card.remove()
+        source_pile.card.remove()
 
         # 2. Position auf dem Zielstapel bestimmen und einfügen
         match target_position:

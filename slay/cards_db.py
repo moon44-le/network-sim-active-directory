@@ -101,6 +101,15 @@ card_pool_eiserner = {
         "description": "Erhält 5 Block.", 
         "target_type": CardTarget.SELF
     },
+
+    "kaffekai": {
+        "name": "Kai´s Kaffee", 
+        "cost": 1, 
+        "card_type": CardType.TRUNK, 
+        "value": 100, 
+        "description": "Gibt 5 Energie", 
+        "target_type": CardTarget.SELF
+    },
     
     "achselzucken": {
         "name": "Achselzucken", 
