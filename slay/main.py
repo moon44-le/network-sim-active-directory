@@ -62,7 +62,7 @@ def combat_loop(player, enemies):
             player.hand.remove(card)
             print(f"\nDu spielst {card.name}!")
 
-            # --- EFFEKT-LOGIK (ohne else) ---
+        
             if card.card_type == "Angriff":
                 for target in target_enemies:
                     for _ in range(card.attacks_count):

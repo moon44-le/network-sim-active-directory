@@ -10,8 +10,8 @@ COLOR_RESET = "\033[0m"     # Zurücksetzen
 
 class CardPersistence(Enum):
     NORMAL = 1      # Wird am Rundenende abgeworfen
-    ETHEREAL = 2    # Wird am Rundenende erschöpft (Flüchtig)
-    RETAIN = 3      # Bleibt am Rundenende auf der Hand (Beständig)
+    ETHEREAL = 2    # Flüchtig
+    RETAIN = 3      # Beständig
 
 class CardTarget(Enum):
     SELF = 1          # Spieler selbst
@@ -19,7 +19,12 @@ class CardTarget(Enum):
     ALL_ENEMIES = 3   # Alle aktiven Gegner (AoE)
 
 class CardType(Enum):
-    
+    ATTACK = 1      # Angriff
+    SKILL = 2       # Fertigkeit
+    POWER = 3       # Macht
+    STATUS = 4      # Status
+    CURSE = 5       # Fluch
+    TRUNK = 6       # Tränke
 
 class Card:
     def __init__(self, name, cost, card_type, value, description, 
@@ -37,27 +42,18 @@ class Card:
         self.persistence = persistence
         self.attacks_count = attacks_count
 
+    def get_card_color(self):
+        match self.card_type:
+            case CardType.ATTACK:   return COLOR_RED
+            case CardType.SKILL:    return COLOR_BLUE
+            case CardType.POWER:    return COLOR_YELLOW
+            case CardType.POWER:    return COLOR_GREY
+            case _:                 return COLOR_GREY
+
     def get_colored_string(self):
-        color = COLOR_GREY
-        if self.is_colorless:
-            color = COLOR_GREY
-        elif self.card_type == "Angriff":
-            color = COLOR_RED
-        elif self.card_type == "Fertigkeit":
-            color = COLOR_BLUE
-        elif self.card_type == "Macht":
-            color = COLOR_YELLOW
-        
         display_keywords = []
-        if self.exhausts:
-            display_keywords.append("Erschöpfend")
-        if self.persistence == CardPersistence.ETHEREAL:
-            display_keywords.append("Flüchtig")
-        elif self.persistence == CardPersistence.RETAIN:
-            display_keywords.append("Beständig")
-        
-        kw_str = f" ({', '.join(display_keywords)})" if display_keywords else ""
-        return f"{color}[{self.name}]{COLOR_RESET}{kw_str} (Kosten: {self.cost}) - {self.description}"
+        kw_str = f" ({', '.join(display_keywords)})" if display_keywords else ""   
+        return f"{self.get_card_color()}[{self.name}]{COLOR_RESET}{kw_str} (Kosten: {self.cost}) - {self.description}"
 
     def __str__(self):
         return self.get_colored_string()

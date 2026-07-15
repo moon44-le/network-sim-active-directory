@@ -1,6 +1,6 @@
 # cards_db.py
-from card import CardTarget, CardPersistence
-from effect import VulnerableEffect, ZuwachsEffect, StrengthEffect, BufferEffect
+from card import CardTarget, CardPersistence, CardType
+from effect import VulnerableEffect, ZuwachsEffect, StrengthEffect, BufferEffect, HealEffect
 
 # ==========================================
 # 1. CARD POOL: DER EISERNE (Klassen-Karten)
@@ -14,7 +14,7 @@ card_pool_eiserner = {
     "schlag": {
         "name": "Schlag", 
         "cost": 1, 
-        "card_type": "Angriff", 
+        "card_type": CardType.ATTACK, 
         "value": 6, 
         "description": "Fügt 6 Schaden zu.", 
         "target_type": CardTarget.SINGLE_ENEMY
@@ -23,7 +23,7 @@ card_pool_eiserner = {
     "zerschmettern": {
         "name": "Zerschmettern", 
         "cost": 1, 
-        "card_type": "Angriff", 
+        "card_type": CardType.ATTACK, 
         "value": 8, # Im Original unaufgewertet 8 Schaden
         "description": "Fügt 8 Schaden zu. Verursacht 2 Verwundbar.", 
         "target_type": CardTarget.SINGLE_ENEMY, 
@@ -33,7 +33,7 @@ card_pool_eiserner = {
     "rundumschlag": {
         "name": "Rundumschlag", 
         "cost": 1, 
-        "card_type": "Angriff", 
+        "card_type": CardType.ATTACK, 
         "value": 8, # Im Original unaufgewertet 8 AoE-Schaden
         "description": "Fügt allen Gegnern 8 Schaden zu.", 
         "target_type": CardTarget.ALL_ENEMIES
@@ -42,7 +42,7 @@ card_pool_eiserner = {
     "zwillingsschlag": {
         "name": "Zwillingsschlag", 
         "cost": 1, 
-        "card_type": "Angriff", 
+        "card_type": CardType.ATTACK, 
         "value": 5, 
         "description": "Fügt 2-mal 5 Schaden zu.", 
         "target_type": CardTarget.SINGLE_ENEMY,
@@ -52,7 +52,7 @@ card_pool_eiserner = {
     "schwertbumerang": {
         "name": "Schwertbumerang", 
         "cost": 1, 
-        "card_type": "Angriff", 
+        "card_type": CardType.ATTACK, 
         "value": 3, 
         "description": "Trifft zufällige Gegner 3-mal für je 3 Schaden.", 
         # Da wir noch keine Zufallsziel-Logik haben, behandeln wir es als AoE oder Single-Target:
@@ -63,7 +63,7 @@ card_pool_eiserner = {
     "blutbad": {
         "name": "Blutbad", 
         "cost": 2, 
-        "card_type": "Angriff", 
+        "card_type": CardType.ATTACK, 
         "value": 20, 
         "description": "Flüchtig. Fügt 20 Schaden zu.", 
         "target_type": CardTarget.SINGLE_ENEMY,
@@ -73,7 +73,7 @@ card_pool_eiserner = {
     "aufwaertshaken": {
         "name": "Aufwärtshaken", 
         "cost": 2, 
-        "card_type": "Angriff", 
+        "card_type": CardType.ATTACK, 
         "value": 12, 
         "description": "Fügt 12 Schaden zu. Verursacht 1 Verwundbar.", 
         "target_type": CardTarget.SINGLE_ENEMY,
@@ -83,7 +83,7 @@ card_pool_eiserner = {
     "vorschlaghammer": {
         "name": "Vorschlaghammer", 
         "cost": 3, 
-        "card_type": "Angriff", 
+        "card_type": CardType.ATTACK, 
         "value": 32, 
         "description": "Fügt gigantische 32 Schaden zu.", 
         "target_type": CardTarget.SINGLE_ENEMY
@@ -96,7 +96,7 @@ card_pool_eiserner = {
     "verteidigung": {
         "name": "Verteidigung", 
         "cost": 1, 
-        "card_type": "Fertigkeit", 
+        "card_type": CardType.SKILL, 
         "value": 5, 
         "description": "Erhält 5 Block.", 
         "target_type": CardTarget.SELF
@@ -105,7 +105,7 @@ card_pool_eiserner = {
     "achselzucken": {
         "name": "Achselzucken", 
         "cost": 1, 
-        "card_type": "Fertigkeit", 
+        "card_type": CardType.SKILL, 
         "value": 8, 
         "description": "Erhält 8 Block. (Zieht im Original 1 Karte).", 
         "target_type": CardTarget.SELF
@@ -114,7 +114,7 @@ card_pool_eiserner = {
     "geisterruestung": {
         "name": "Geisterrüstung", 
         "cost": 1, 
-        "card_type": "Fertigkeit", 
+        "card_type": CardType.SKILL, 
         "value": 10, 
         "description": "Flüchtig. Erhält 10 Block.", 
         "target_type": CardTarget.SELF,
@@ -124,7 +124,7 @@ card_pool_eiserner = {
     "unbezwingbar": {
         "name": "Unbezwingbar", 
         "cost": 2, 
-        "card_type": "Fertigkeit", 
+        "card_type": CardType.SKILL, 
         "value": 30, 
         "description": "Erschöpfend. Erhält 30 Block.", 
         "target_type": CardTarget.SELF,
@@ -134,7 +134,7 @@ card_pool_eiserner = {
     "flammenbarriere": {
         "name": "Flammenbarriere", 
         "cost": 2, 
-        "card_type": "Fertigkeit", 
+        "card_type": CardType.SKILL, 
         "value": 12, 
         "description": "Erhält 12 Block. Fügt Angreifern Schaden zu (hier: 1 Puffer).", 
         "target_type": CardTarget.SELF, 
@@ -148,7 +148,7 @@ card_pool_eiserner = {
     "entflammen": {
         "name": "Entflammen", 
         "cost": 1, 
-        "card_type": "Macht", 
+        "card_type": CardType.POWER, 
         "value": 0, 
         "description": "Erhalte sofort +2 Stärke.", 
         "target_type": CardTarget.SELF,
@@ -158,7 +158,7 @@ card_pool_eiserner = {
     "daemonenform": {
         "name": "Dämonenform", 
         "cost": 3, 
-        "card_type": "Macht", 
+        "card_type": CardType.POWER, 
         "value": 0, 
         "description": "Erhalte jede Runde dauerhaft 2 Stärke.", 
         "target_type": CardTarget.SELF, 
@@ -168,7 +168,7 @@ card_pool_eiserner = {
     "metallisieren": {
         "name": "Metallisieren", 
         "cost": 1, 
-        "card_type": "Macht", 
+        "card_type": CardType.POWER, 
         "value": 0, 
         "description": "Erhalte jede Runde dauerhaft 3 Block. (Noch zu implementieren)", 
         "target_type": CardTarget.SELF,
@@ -183,7 +183,7 @@ card_pool_farblos = {
     "heiltrank": {
         "name": "Heiltrank", 
         "cost": 0, 
-        "card_type": "Fertigkeit", 
+        "card_type": CardType.TRUNK, 
         "value": 0, 
         "description": "Heilt dich im Notfall um 2 HP.", 
         "target_type": CardTarget.SELF, 
@@ -200,7 +200,7 @@ card_pool_status = {
     "wunde": {
         "name": "Wunde",
         "cost": -1,  # Nicht spielbar!
-        "card_type": "Status",
+        "card_type": CardType.STATUS,
         "value": 0,
         "description": "Unspielbar. Verstopft deine Hand.",
         "target_type": CardTarget.SELF,
@@ -209,7 +209,7 @@ card_pool_status = {
     "schleim": {
         "name": "Schleim",
         "cost": 1,
-        "card_type": "Status",
+        "card_type": CardType.STATUS,
         "value": 0,
         "description": "Erschöpfend. Tut nichts.",
         "target_type": CardTarget.SELF,
