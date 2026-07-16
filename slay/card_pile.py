@@ -6,6 +6,11 @@ class CardPile:
         # Erstellt eine leere Liste, falls keine Karten übergeben wurden
         self.cards = list(cards) if cards else []
 
+    def __getitem__(self, index):
+        """Ermöglicht den Zugriff per Index, z. B. pile[0]"""
+        return self.cards[index]
+
+
     def size(self) -> int:
         return len(self.cards)
 
@@ -37,7 +42,7 @@ class CardPile:
             card_to_draw = self.draw_pile[0]
             self.transfer_card(self.draw_pile, self.hand_pile, card_to_draw)
 
-    def transfer_card(self, source_pile, target_pile, card, target_position = None):
+    def transfer_card(source_pile, target_pile, card, target_position = None):
 
         # 1. Karte aus dem aktuellen Stapel entfernen
         if card not in source_pile:
