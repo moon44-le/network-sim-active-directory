@@ -1,74 +1,56 @@
 import random
 
 class CardPile:
-    def __init__(self, name: str, cards=None):
+    def __init__(self, name: str):
         self.name = name
-        # Erstellt eine leere Liste, falls keine Karten übergeben wurden
-        self.cards = list(cards) if cards else []
+        self.cards = []
 
-    def __getitem__(self, index):
-        """Ermöglicht den Zugriff per Index, z. B. pile[0]"""
-        return self.cards[index]
-
-
-    def size(self) -> int:
+    def __len__(self):
         return len(self.cards)
 
-    def is_empty(self) -> bool:
-        return len(self.cards) == 0
+    def __iter__(self):
+        return iter(self.cards)
 
-    def add_to_bottom(self, card):
-        """Fügt eine Karte unten am Stapel hinzu (z. B. für bestimmte Effekte)."""
-        self.cards.insert(0, card)
-
-    def add_to_top(self, card):
-        """Fügt eine Karte oben auf dem Stapel hinzu."""
-        self.cards.append(card)
+    def __getitem__(self, index):
+        return self.cards[index]
 
     def shuffle(self):
+        """Mischt die Karten im Stapel."""
         random.shuffle(self.cards)
 
-    def draw_cards(self, num):
-
-        for _ in range(num):
-            if not self.draw_pile:
-                if not self.discard_pile:
-                    break  # Keine Karten mehr im Spiel
-                
-                self.draw_pile = self.discard_pile.copy()
-                random.shuffle(self.draw_pile)
-                self.discard_pile = []
-            
-            card_to_draw = self.draw_pile[0]
-            self.transfer_card(self.draw_pile, self.hand_pile, card_to_draw)
-
-    def transfer_card(source_pile, target_pile, card, target_position = None):
-
-        # 1. Karte aus dem aktuellen Stapel entfernen
-        if card not in source_pile:
-            raise ValueError(f"Karte '{card.name}' ist nicht im Stapel '{self.name}'!")
-        source_pile.card.remove()
-
-        # 2. Position auf dem Zielstapel bestimmen und einfügen
-        match target_position:
-            case "top":
-                target_pile.cards.insert(0, card)
-            case "bottom":
-                target_pile.cards.append(card)
-            case "random":
-                insert_idx = random.randint(0, len(target_pile.cards))
-                target_pile.cards.insert(insert_idx, card)
-            case int() as idx:
-                safe_idx = max(0, min(idx, len(target_pile.cards)))
-                target_pile.cards.insert(safe_idx, card)
-            case _:
-                target_pile.cards.append(card)
-
-        print(f"🔄 [{card.name}] transferiert: {self.name} ➡️ {target_pile.name} ({target_position})")
-
     def clear(self):
-        """Leert den Stapel vollständig."""
+        """Leert den Stapel komplett."""
         self.cards.clear()
 
+    def add(self, card, position: int = None):
+        """Fügt eine Karte hinzu (Standard: am Ende / oben auf dem Stapel)."""
+        if position is not None:
+            self.cards.insert(position, card)
+        else:
+            self.cards.append(card)
+
+    def remove(self, card):
+        """Entfernt eine bestimmte Karte aus dem Stapel."""
+        if card not in self.cards:
+            raise ValueError(f"Karte '{card.name}' ist nicht im Stapel '{self.name}'!")
+        self.cards.remove(card)
+
+    def pop_top(self):
+        """Zieht die oberste Karte (vom Ende der Liste) und gibt sie zurück."""
+        if not self.cards:
+            raise IndexError(f"Stapel '{self.name}' ist leer!")
+        return self.cards.pop()
+
+    def transfer_card(self, target_pile: "CardPile", card, target_position: int = None):
+        """Transferiert eine spezifische Karte in einen anderen Stapel."""
+        self.remove(card)
+        target_pile.add(card, position=target_position)
+
+    def transfer_all_to(self, target_pile: "CardPile"):
+        """Transferiert alle Karten dieses Stapels in das Ziel (z.B. Hand -> Ablagestapel)."""
+        # Kopie erstellen, um Schleifen-Probleme beim Entfernen zu vermeiden
+        for card in list(self.cards):
+            self.transfer_card(target_pile, card)
+
     def __str__(self):
-        return f"{self.name} ({self.size()} Karten)"
+        return f"{self.name} ({len(self.cards)} Karten)"

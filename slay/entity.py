@@ -13,58 +13,12 @@ class Entity:
         self.block = 0
         self.effects = {}
 
-    def apply_effect(self, effect):
-        if not effect: return
-        if effect.is_instant:
-            effect.trigger_instant(self)
-            return
-
-        if effect.name in self.effects:
-            self.effects[effect.name].stacks += effect.stacks
-            print(f"  [System] {self.name}s {effect.name} steigt auf {self.effects[effect.name].stacks}!")
-            return
-
-        self.effects[effect.name] = effect
-        print(f"  [System] {self.name} erhält {effect.name} ({effect.stacks})!")
-
-    def clean_expired_effects(self):
-        expired = [name for name, eff in self.effects.items() if eff.stacks <= 0]
-        for name in expired: del self.effects[name]
-
-    def take_damage(self, damage):
-        modified_damage = damage
-        for eff in self.effects.values():
-            modified_damage = eff.modify_damage_take(modified_damage)
-
-        if self.block >= modified_damage:
-            self.block -= modified_damage
-            print(f"  {self.name} blockt den gesamten Schaden! ({self.block} Block übrig)")
-            return
-
-        remaining_damage = modified_damage - self.block
-        self.block = 0
-        self.hp = max(0, self.hp - remaining_damage)
-        print(f"  {self.name} verliert {remaining_damage} HP! (HP: {self.hp}/{self.max_hp})")
-
-    def add_block(self, amount):
-        self.block += amount
-        print(f"  {self.name} erhält {amount} Block! (Gesamtblock: {self.block})")
-
-    def is_alive(self):
-        return self.hp > 0
-
-    def get_effects_string(self):
-        if not self.effects: return ""
-        eff_list = [f"{eff.name} ({eff.stacks})" for eff in self.effects.values()]
-        return " | Effekte: " + ", ".join(eff_list)
-
-
 class Player(Entity):
     def __init__(self, name="Der Eiserne", hp=80):
             super().__init__(name, hp)
             self.max_energy = 3
             self.energy = 3
-            self.hand = []
+#            self.hand = []
 
     def init_combat(self):
         self.draw_pile = CardPile("Nachziehstapel", card_factory.get_starting_deck())
@@ -118,6 +72,7 @@ class Player(Entity):
             
             # Jetzt nutzen wir die neue Transfer-Methode
             CardPile.transfer_card(self.draw_pile, self.hand_pile, card_to_draw)
+            
 
 
 class Enemy(Entity):

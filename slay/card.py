@@ -1,7 +1,6 @@
 # card.py
 from enum import Enum
 
-# ANSI-Farbcodes für das Terminal (hier zentralisiert)
 COLOR_RED = "\033[31m"      # Angriff
 COLOR_BLUE = "\033[34m"     # Fertigkeit
 COLOR_YELLOW = "\033[33m"   # Macht
