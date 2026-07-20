@@ -9,21 +9,42 @@ class GamePhase(Enum):
     FINISH      = 5  # Sieg, Niederlage
 
 class GameObject(Enum):
-    MAP = 1
-    CARDS = 2
-    MENU = 3
-
+    GAME    = 1 # Fight, Shop, Event, Boss
+    MAP     = 2
+    CARDS   = 3
+    MENU    = 4
 
 class Orchestrator:
     def __init__(self):
-        self.player = None
+
+        self.game_object    = GameObject.GAME
+        self.game_phase     = GamePhase.START
+        self.player_char    = None
+
         self.game_map = None        # Enthält alle fertig initialisierten Ebenen/Gegner
         self.current_floor = 1
         self.current_node = None    # Die aktuell ausgewählte Abzweigung/Node
-        self.active_enemies = []    # Die Gegner für den aktuellen Kampf
-        self.game_active = True
+       # self.active_enemies = []    # Die Gegner für den aktuellen Kampf
+       # self.game_active = True
 
     def run(self):
+
+        match self.game_object:
+            case GameObject.GAME:   
+                match self.game_phase:
+                    case GamePhase.START:       return # TODO
+                    case GamePhase.CHOOSECHAR:  return # TODO
+                    case GamePhase.NODE:        return # TODO
+                    case GamePhase.FINISH:      return # TODO
+                    case _:                     return # TODO
+            case GameObject.MAP:    return # TODO
+            case GameObject.CARDS:  return # TODO
+            case GameObject.MENU:   return # TODO
+            case _:                 return # TODO
+
+
+
+
         """Startet den sequentiellen Wasserfall-Prozess des Spiels."""
         print("🎮 Starte Slay the Spire (CLI-Edition)...")
         
