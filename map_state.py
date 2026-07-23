@@ -16,6 +16,7 @@ class MapState(BaseState):
         self.map_generator.draw_ascii_map()
 
         print("\nWas möchtest du tun?")
+        #Einen Weg wählen (Wegpunkt auf Etage 1)
         print("1. Einen Weg wählen (Wegpunkt auf Etage 1)")
         print("2. Zurück ins Hauptmenü")
         choice = input("> ").strip()
