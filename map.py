@@ -224,3 +224,14 @@ class Generator:
                 else:
                     row_str += " .             "
             print(row_str)
+
+if __name__ == "__main__":
+    # Generator initialisieren (Standard: 7 Spalten, 15 Etagen, 6 Pfade)
+    map_generator = Generator(width=7, height=15, paths_count=6)
+    
+    # Karte generieren lassen
+    generated_grid = map_generator.generate()
+    
+    # Textbasierte Vorschau ausgeben
+    map_generator.size_map = generated_grid  # falls benötigt
+    map_generator.draw_ascii_map()
