@@ -1,3 +1,5 @@
+#base_state.py
+
 from map import Generator
 
 class BaseState:
@@ -33,14 +35,13 @@ class MainMenuState(BaseState):
             map_generator = Generator(width=7, height=15, paths_count=6)
             grid = map_generator.generate()
 
-            # Optional: Die Karte direkt im Orchestrator / GameManager speichern,
-            # damit sie für das gesamte Spiel erhalten bleibt
-            self.state_manager.orchestrator.current_map = grid  # Oder das map_generator Objekt
-
             # 2. Zum MapState wechseln
             from map_state import MapState  # Dein neuer State für die Kartenanzeige
             self.state_manager.change_state(MapState(self.state_manager, map_generator))
+            return
+
         if choice == "2":
             self.state_manager.pop_state()  # Beendet den Stack / das Spiel
-        else:
-            print("Ungültige Eingabe!")
+            return
+
+        print("Ungültige Eingabe!")

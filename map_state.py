@@ -1,6 +1,7 @@
 # map_state.py
 
 from map import Generator
+from base_state import BaseState
 
 class MapState(BaseState):
     def __init__(self, state_manager, map_generator):
